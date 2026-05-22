@@ -1,0 +1,324 @@
+{% extends 'header.html' %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+</head>
+
+<body>
+	<section id="home-section" class="hero">
+		<div class="home-slider js-fullheight owl-carousel">
+			<div class="slider-item js-fullheight">
+				<div class="overlay"></div>
+				<div class="container-fluid p-0">
+					<div class="row d-md-flex no-gutters slider-text js-fullheight align-items-center justify-content-end"
+						data-scrollax-parent="true">
+						<div class="one-third order-md-last img js-fullheight"
+							style="background-image:url(&quot;{% static 'images/bg_1.jpg' %}&quot;);">
+						</div>
+						<div class="one-forth d-flex js-fullheight align-items-center ftco-animate"
+							data-scrollax=" properties: { translateY: '70%' }">
+							<div class="text">
+								<span class="subheading">Winkel eCommerce Shop</span>
+								<div class="horizontal">
+									<h3 class="vr"
+										style="background-image: url(&quot;{% static 'images/divider.jpg' %}&quot;);">
+										Stablished Since 2000</h3>
+									<h1 class="mb-4 mt-3">Catch Your Own <br><span>Stylish &amp; Look</span></h1>
+									<p>A small river named Duden flows by their place and supplies it with the necessary
+										regelialia. It is a paradisematic country.</p>
+
+									<p><a href="{% url 'shop' %}" class="btn btn-primary px-5 py-3 mt-3">Discover
+											Now</a></p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="slider-item js-fullheight">
+				<div class="overlay"></div>
+				<div class="container-fluid p-0">
+					<div class="row d-flex no-gutters slider-text js-fullheight align-items-center justify-content-end"
+						data-scrollax-parent="true">
+						<div class="one-third order-md-last img js-fullheight"
+							style="background-image:url(&quot;{% static 'images/bg_2.jpg' %}&quot;);">
+						</div>
+						<div class="one-forth d-flex js-fullheight align-items-center ftco-animate"
+							data-scrollax=" properties: { translateY: '70%' }">
+							<div class="text">
+								<span class="subheading">Winkel eCommerce Shop</span>
+								<div class="horizontal">
+									<h3 class="vr"
+										style="background-image: url(&quot;{% static 'images/divider.jpg' %}&quot;);">
+										Best eCommerce Online Shop</h3>
+									<h1 class="mb-4 mt-3">A Thouroughly <span>Modern</span> Woman</h1>
+									<p>A small river named Duden flows by their place and supplies it with the necessary
+										regelialia. It is a paradisematic country.</p>
+
+									<p><a href="#" class="btn btn-primary px-5 py-3 mt-3">Shop Now</a></p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- {% if messages %}
+	<div class="container mt-4">
+		{% for message in messages %}
+		<div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+			{{ message }}
+			<button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+		</div>
+		{% endfor %}
+	</div>
+	{% endif %} -->
+
+	<section class="ftco-section bg-light">
+		<div class="container">
+			<div class="row justify-content-center mb-3 pb-3">
+				<div class="col-md-12 heading-section text-center ftco-animate">
+					<h2 class="mb-4">All Products</h2>
+					<p>Explore the latest products from our sellers</p>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="row">
+				{% for product in all_products %}
+				<div class="col-sm-6 col-md-4 col-lg-3 ftco-animate mb-4">
+					<div class="product">
+						<a href="{% url 'product_detail' product.id %}" class="img-prod">
+							{% if product.product_image %}
+							<img class="img-fluid" src="{{ product.product_image.url }}"
+								alt="{{ product.product_name }}" style="height:260px; object-fit:cover; width:100%;">
+							{% else %}
+							<img class="img-fluid" src="{% static 'images/product-1.jpg' %}"
+								alt="{{ product.product_name }}">
+							{% endif %}
+							<span class="status">{{ product.category }}</span>
+							<div class="overlay"></div>
+						</a>
+						<div class="text py-3 px-3">
+							<h3><a href="{% url 'product_detail' product.id %}">{{ product.product_name }}</a></h3>
+							<div class="d-flex">
+								<div class="pricing">
+									<p class="price"><span>&#8377;{{ product.price }}</span></p>
+								</div>
+								<div class="rating">
+									<p class="text-right">
+										<a href="#"><span class="ion-ios-star-outline"></span></a>
+										<a href="#"><span class="ion-ios-star-outline"></span></a>
+										<a href="#"><span class="ion-ios-star-outline"></span></a>
+										<a href="#"><span class="ion-ios-star-outline"></span></a>
+										<a href="#"><span class="ion-ios-star-outline"></span></a>
+									</p>
+								</div>
+							</div>
+							{% if product.id in cart_product_ids %}
+							<p class="bottom-area d-flex px-3">
+								<a href="{% url 'cart' %}" class="add-to-cart text-center py-2">
+									Go to Cart <i class="ion-ios-cart ml-1"></i>
+								</a>
+							</p>
+							{% else %}
+							<p class="bottom-area d-flex px-3">
+								<a href="{% url 'add_to_cart' product.id %}" class="add-to-cart text-center py-2">
+									Add to Cart <i class="ion-ios-cart ml-1"></i>
+								</a>
+							</p>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+				{% empty %}
+				<div class="col-12 text-center py-5">
+					<p class="text-muted">No products available yet. Check back soon!</p>
+				</div>
+				{% endfor %}
+			</div>
+			<!-- View All Button -->
+			<div class="row mt-4">
+				<div class="col-12 text-center">
+					<a href="{% url 'shop' %}" class="btn btn-primary px-5 py-3">
+						View All Products <i class="ion-ios-arrow-forward ml-1"></i>
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="ftco-section ftco-counter img" id="section-counter"
+		style="background-image: url(&quot;{% static 'images/bg_4.jpg' %}&quot;);">
+		<div class="container">
+			<div class="row justify-content-center py-5">
+				<div class="col-md-10">
+					<div class="row">
+						<div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
+							<div class="block-18 text-center">
+								<div class="text">
+									<strong class="number" data-number="10000">0</strong>
+									<span>Happy Customers</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
+							<div class="block-18 text-center">
+								<div class="text">
+									<strong class="number" data-number="100">0</strong>
+									<span>Branches</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
+							<div class="block-18 text-center">
+								<div class="text">
+									<strong class="number" data-number="1000">0</strong>
+									<span>Partner</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
+							<div class="block-18 text-center">
+								<div class="text">
+									<strong class="number" data-number="100">0</strong>
+									<span>Awards</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="ftco-section testimony-section">
+		<div class="container">
+			<div class="row justify-content-center mb-5 pb-3">
+				<div class="col-md-7 heading-section ftco-animate">
+					<h2 class="mb-4">Our satisfied customer says</h2>
+					<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there
+						live the blind texts. Separated they live in</p>
+				</div>
+			</div>
+			<div class="row ftco-animate">
+				<div class="col-md-12">
+					<div class="carousel-testimony owl-carousel">
+						<div class="item">
+							<div class="testimony-wrap p-4 pb-5">
+								<div class="user-img mb-5"
+									style="background-image: url(&quot;{% static 'images/person_1.jpg' %}&quot;)">
+									<span class="quote d-flex align-items-center justify-content-center">
+										<i class="icon-quote-left"></i>
+									</span>
+								</div>
+								<div class="text">
+									<p class="mb-5 pl-4 line">Far far away, behind the word mountains, far from the
+										countries Vokalia and Consonantia, there live the blind texts.</p>
+									<p class="name">Garreth Smith</p>
+									<span class="position">Marketing Manager</span>
+								</div>
+							</div>
+						</div>
+						<div class="item">
+							<div class="testimony-wrap p-4 pb-5">
+								<div class="user-img mb-5"
+									style="background-image: url(&quot;{% static 'images/person_2.jpg' %}&quot;)">
+									<span class="quote d-flex align-items-center justify-content-center">
+										<i class="icon-quote-left"></i>
+									</span>
+								</div>
+								<div class="text">
+									<p class="mb-5 pl-4 line">Far far away, behind the word mountains, far from the
+										countries Vokalia and Consonantia, there live the blind texts.</p>
+									<p class="name">Garreth Smith</p>
+									<span class="position">Interface Designer</span>
+								</div>
+							</div>
+						</div>
+						<div class="item">
+							<div class="testimony-wrap p-4 pb-5">
+								<div class="user-img mb-5"
+									style="background-image: url(&quot;{% static 'images/person_3.jpg' %}&quot;)">
+									<span class="quote d-flex align-items-center justify-content-center">
+										<i class="icon-quote-left"></i>
+									</span>
+								</div>
+								<div class="text">
+									<p class="mb-5 pl-4 line">Far far away, behind the word mountains, far from the
+										countries Vokalia and Consonantia, there live the blind texts.</p>
+									<p class="name">Garreth Smith</p>
+									<span class="position">UI Designer</span>
+								</div>
+							</div>
+						</div>
+						<div class="item">
+							<div class="testimony-wrap p-4 pb-5">
+								<div class="user-img mb-5"
+									style="background-image: url(&quot;{% static 'images/person_1.jpg' %}&quot;)">
+									<span class="quote d-flex align-items-center justify-content-center">
+										<i class="icon-quote-left"></i>
+									</span>
+								</div>
+								<div class="text">
+									<p class="mb-5 pl-4 line">Far far away, behind the word mountains, far from the
+										countries Vokalia and Consonantia, there live the blind texts.</p>
+									<p class="name">Garreth Smith</p>
+									<span class="position">Web Developer</span>
+								</div>
+							</div>
+						</div>
+						<div class="item">
+							<div class="testimony-wrap p-4 pb-5">
+								<div class="user-img mb-5"
+									style="background-image: url(&quot;{% static 'images/person_1.jpg' %}&quot;)">
+									<span class="quote d-flex align-items-center justify-content-center">
+										<i class="icon-quote-left"></i>
+									</span>
+								</div>
+								<div class="text">
+									<p class="mb-5 pl-4 line">Far far away, behind the word mountains, far from the
+										countries Vokalia and Consonantia, there live the blind texts.</p>
+									<p class="name">Garreth Smith</p>
+									<span class="position">System Analyst</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<hr>
+
+	<section class="ftco-section-parallax">
+		<div class="parallax-img d-flex align-items-center">
+			<div class="container">
+				<div class="row d-flex justify-content-center py-5">
+					<div class="col-md-7 text-center heading-section ftco-animate">
+						<h2>Subcribe to our Newsletter</h2>
+						<div class="row d-flex justify-content-center mt-5">
+							<div class="col-md-8">
+								<form action="#" class="subscribe-form">
+									<div class="form-group d-flex">
+										<input type="text" class="form-control" placeholder="Enter email address">
+										<input type="submit" value="Subscribe" class="submit px-3">
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+</html>
+{% endblock %}

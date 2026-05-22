@@ -1,0 +1,110 @@
+{% extends 'header.html' %}
+{% load static %}
+{% block content %}
+
+<!-- Page banner -->
+<section class="hero-wrap hero-wrap-2" style="background-image: url('{% static "images/bg_1.jpg" %}');">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text align-items-end justify-content-center">
+            <div class="col-md-9 ftco-animate pb-5 text-center">
+                <h1 class="mb-3 bread">Shop</h1>
+                <p class="breadcrumbs">
+                    <span class="mr-2"><a href="{% url 'index' %}">Home <i class="ion-ios-arrow-forward"></i></a></span>
+                    <span>Shop</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="ftco-section">
+    <div class="container">
+
+        <!-- Category Filter -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex flex-wrap" style="gap: 8px;">
+                    <a href="{% url 'shop' %}"
+                       class="btn btn-sm {% if not active_category %}btn-primary{% else %}btn-outline-secondary{% endif %} px-3">
+                        All
+                    </a>
+                    {% for cat in categories %}
+                    <a href="{% url 'shop' %}?category={{ cat }}"
+                       class="btn btn-sm {% if active_category == cat %}btn-primary{% else %}btn-outline-secondary{% endif %} px-3">
+                        {{ cat }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="row">
+            {% for product in all_products %}
+            <div class="col-sm-6 col-md-4 col-lg-3 ftco-animate mb-4">
+                <div class="product">
+                    <a href="{% url 'product_detail' product.id %}" class="img-prod">
+                        {% if product.product_image %}
+                        <img class="img-fluid" src="{{ product.product_image.url }}" alt="{{ product.product_name }}"
+                            style="height:260px; object-fit:cover; width:100%;">
+                        {% else %}
+                        <img class="img-fluid" src="{% static 'images/product-1.jpg' %}" alt="{{ product.product_name }}">
+                        {% endif %}
+                        <span class="status">{{ product.category }}</span>
+                        <div class="overlay"></div>
+                    </a>
+                    <div class="text py-3 px-3">
+                        <h3><a href="{% url 'product_detail' product.id %}">{{ product.product_name }}</a></h3>
+                        <p class="text-muted" style="font-size:12px; margin-bottom:6px;">
+                            {{ product.description|truncatechars:60 }}
+                        </p>
+                        <div class="d-flex">
+                            <div class="pricing">
+                                <p class="price"><span>&#8377;{{ product.price }}</span></p>
+                            </div>
+                            <div class="rating">
+                                <p class="text-right">
+                                    <a href="#"><span class="ion-ios-star-outline"></span></a>
+                                    <a href="#"><span class="ion-ios-star-outline"></span></a>
+                                    <a href="#"><span class="ion-ios-star-outline"></span></a>
+                                    <a href="#"><span class="ion-ios-star-outline"></span></a>
+                                    <a href="#"><span class="ion-ios-star-outline"></span></a>
+                                </p>
+                            </div>
+                        </div>
+                        <p class="bottom-area d-flex px-3">
+                            {% if product.id in cart_product_ids %}
+                            <a href="{% url 'cart' %}" class="add-to-cart text-center py-2 mr-1">
+                                <span>Go to Cart <i class="ion-ios-cart ml-1"></i></span>
+                            </a>
+                            {% else %}
+                            <a href="{% url 'add_to_cart' product.id %}" class="add-to-cart text-center py-2 mr-1">
+                                <span>Add to Cart <i class="ion-ios-add ml-1"></i></span>
+                            </a>
+                            {% endif %}
+                            <a href="{% url 'product_detail' product.id %}" class="buy-now text-center py-2">
+                                View<span><i class="ion-ios-arrow-forward ml-1"></i></span>
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <i class="ion-ios-pricetag" style="font-size:4rem; color:#ddd;"></i>
+                <p class="text-muted mt-3">
+                    {% if active_category %}
+                        No products found in "{{ active_category }}".
+                    {% else %}
+                        No products available yet.
+                    {% endif %}
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

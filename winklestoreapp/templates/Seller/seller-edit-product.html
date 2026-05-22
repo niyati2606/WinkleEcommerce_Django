@@ -1,0 +1,219 @@
+{% extends 'seller/seller-header.html' %}
+{% load static %}
+{% block content %}
+
+<section class="ftco-section bg-light" style="padding-top: 5em; padding-bottom: 5em;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-7">
+
+                <div class="card shadow-sm border-0 rounded">
+                    <div class="card-header bg-dark text-white py-3 px-4">
+                        <h4 class="mb-0" style="color: #f96d00;">Edit Product</h4>
+                        <p class="mb-0 text-muted" style="font-size: 13px;">Update the details for <strong style="color:#aaa;">{{ product.product_name }}</strong></p>
+                    </div>
+
+                    <div class="card-body px-4 py-4">
+                        {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+
+                        <form method="POST" action="{% url 'edit_product' product.id %}" enctype="multipart/form-data">
+                            {% csrf_token %}
+
+                            <!-- Category -->
+                            <div class="form-group">
+                                <label class="font-weight-bold">Category <span class="text-danger">*</span></label>
+                                <div class="d-flex flex-wrap mt-2" style="gap: 20px;">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="category" id="cat_men"
+                                            value="Men" required {% if product.category == 'Men' %}checked{% endif %}>
+                                        <label class="form-check-label" for="cat_men">Men</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="category" id="cat_women"
+                                            value="Women" {% if product.category == 'Women' %}checked{% endif %}>
+                                        <label class="form-check-label" for="cat_women">Women</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="category" id="cat_kids"
+                                            value="Kids" {% if product.category == 'Kids' %}checked{% endif %}>
+                                        <label class="form-check-label" for="cat_kids">Kids</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="category" id="cat_others"
+                                            value="Others" {% if product.category == 'Others' %}checked{% endif %}>
+                                        <label class="form-check-label" for="cat_others">Others</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Product Name -->
+                            <div class="form-group">
+                                <label for="product_name" class="font-weight-bold">Product Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="product_name" name="product_name"
+                                    value="{{ product.product_name }}" required maxlength="200">
+                            </div>
+
+                            <!-- Price -->
+                            <div class="form-group">
+                                <label for="price" class="font-weight-bold">Price (&#8377;) <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-dark text-white border-0">&#8377;</span>
+                                    </div>
+                                    <input type="number" class="form-control" id="price" name="price"
+                                        value="{{ product.price }}" required min="0" step="0.01">
+                                </div>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="form-group">
+                                <label for="description" class="font-weight-bold">Description <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="description" name="description" rows="4"
+                                    required>{{ product.description }}</textarea>
+                            </div>
+
+                            <!-- Product Image -->
+                            <div class="form-group">
+                                <label class="font-weight-bold">Product Image</label>
+
+                                <!-- Current image preview -->
+                                {% if product.product_image %}
+                                <div class="current-image mb-3">
+                                    <p class="text-muted mb-1" style="font-size: 12px;">Current image:</p>
+                                    <img src="{{ product.product_image.url }}" alt="{{ product.product_name }}"
+                                        class="rounded" style="height: 120px; object-fit: cover; border: 2px solid #dee2e6;">
+                                </div>
+                                {% endif %}
+
+                                <div class="image-upload-area" id="imageUploadArea">
+                                    <div class="image-preview-container d-none" id="imagePreviewContainer">
+                                        <img id="imagePreview" src="#" alt="New Preview" class="img-fluid rounded"
+                                            style="max-height: 200px; object-fit: contain;">
+                                        <button type="button" class="btn btn-sm btn-danger mt-2" id="removeImage">
+                                            <i class="ion-ios-close mr-1"></i>Remove
+                                        </button>
+                                    </div>
+                                    <div id="uploadPlaceholder" class="text-center py-4">
+                                        <i class="ion-ios-image" style="font-size: 3rem; color: #ccc;"></i>
+                                        <p class="mt-2 mb-1 text-muted">Upload a new image to replace the current one</p>
+                                        <p class="text-muted" style="font-size: 12px;">PNG, JPG, WEBP — max 5 MB &nbsp;(optional)</p>
+                                    </div>
+                                    <input type="file" class="file-input" id="product_image" name="product_image"
+                                        accept="image/*">
+                                </div>
+                            </div>
+
+                            <!-- Submit -->
+                            <div class="d-flex justify-content-between align-items-center mt-4">
+                                <a href="{% url 'seller_products' %}" class="btn btn-outline-secondary px-4 py-2">
+                                    <i class="ion-ios-arrow-back mr-1"></i>Cancel
+                                </a>
+                                <button type="submit" class="btn btn-primary px-5 py-2">
+                                    Save Changes <i class="ion-ios-checkmark ml-1"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .form-check-input:checked {
+        accent-color: #f96d00;
+    }
+
+    .image-upload-area {
+        position: relative;
+        border: 2px dashed #dee2e6;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: border-color 0.2s ease;
+        background: #fafafa;
+        overflow: hidden;
+    }
+
+    .image-upload-area:hover {
+        border-color: #f96d00;
+    }
+
+    .image-upload-area .file-input {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+
+    .image-preview-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 16px;
+    }
+
+    .card-header {
+        border-bottom: 3px solid #f96d00;
+    }
+
+    .form-control:focus {
+        border-color: #f96d00;
+        box-shadow: 0 0 0 0.2rem rgba(249, 109, 0, 0.15);
+    }
+
+    .btn-primary {
+        background-color: #f96d00;
+        border-color: #f96d00;
+    }
+
+    .btn-primary:hover {
+        background-color: #d95e00;
+        border-color: #d95e00;
+    }
+
+    .input-group-text {
+        background-color: #343a40;
+        color: #fff;
+    }
+</style>
+
+<script>
+    const fileInput         = document.getElementById('product_image');
+    const imagePreview      = document.getElementById('imagePreview');
+    const previewContainer  = document.getElementById('imagePreviewContainer');
+    const uploadPlaceholder = document.getElementById('uploadPlaceholder');
+    const removeBtn         = document.getElementById('removeImage');
+
+    fileInput.addEventListener('change', function () {
+        const file = this.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            imagePreview.src = e.target.result;
+            previewContainer.classList.remove('d-none');
+            uploadPlaceholder.classList.add('d-none');
+        };
+        reader.readAsDataURL(file);
+    });
+
+    removeBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        fileInput.value = '';
+        imagePreview.src = '#';
+        previewContainer.classList.add('d-none');
+        uploadPlaceholder.classList.remove('d-none');
+    });
+</script>
+
+{% endblock %}

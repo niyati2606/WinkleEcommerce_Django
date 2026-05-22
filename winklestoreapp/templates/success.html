@@ -1,0 +1,96 @@
+{% extends 'header.html' %}
+{% load static %}
+{% block content %}
+
+<section class="ftco-section" style="min-height: 70vh; display:flex; align-items:center;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-7 col-lg-6">
+                <div class="success-card text-center p-5">
+
+                    <!-- Checkmark Icon -->
+                    <div class="check-circle mb-4">
+                        <i class="ion-ios-checkmark"></i>
+                    </div>
+
+                    <h2 class="mb-2" style="font-weight:700; color:#2ecc71;">Payment Successful!</h2>
+                    <p class="text-muted mb-1">Thank you for your order.</p>
+                    <p class="text-muted mb-4">Your payment has been processed and your order is confirmed.</p>
+
+                    {% if order_id %}
+                    <div class="order-info mb-4">
+                        <span class="text-muted" style="font-size:13px;">Order ID</span>
+                        <p class="mb-0" style="font-weight:700; font-size:18px; color:#333;">#{{ order_id }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if net_amount %}
+                    <div class="order-info mb-4">
+                        <span class="text-muted" style="font-size:13px;">Amount Paid</span>
+                        <p class="mb-0" style="font-weight:700; font-size:22px; color:#f96d00;">&#8377;{{ net_amount }}</p>
+                    </div>
+                    {% endif %}
+
+                    <p class="text-muted mb-4" style="font-size:13px;">
+                        A confirmation will be sent to your registered email.
+                    </p>
+
+                    <div class="d-flex justify-content-center flex-wrap" style="gap:12px;">
+                        <a href="{% url 'index' %}" class="btn btn-primary px-4 py-2">
+                            <i class="ion-ios-home mr-1"></i> Go to Home
+                        </a>
+                        <a href="{% url 'shop' %}" class="btn btn-outline-secondary px-4 py-2">
+                            <i class="ion-ios-cart mr-1"></i> Continue Shopping
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .success-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.09);
+    }
+
+    .check-circle {
+        width: 90px;
+        height: 90px;
+        background: #eafaf1;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        animation: pop 0.4s ease;
+    }
+
+    .check-circle i {
+        font-size: 52px;
+        color: #2ecc71;
+        line-height: 1;
+    }
+
+    @keyframes pop {
+        0%   { transform: scale(0.5); opacity: 0; }
+        80%  { transform: scale(1.1); }
+        100% { transform: scale(1);   opacity: 1; }
+    }
+
+    .order-info {
+        background: #f9f9f9;
+        border-radius: 10px;
+        padding: 14px 20px;
+        display: inline-block;
+        min-width: 200px;
+    }
+
+    .btn-primary { background-color: #f96d00; border-color: #f96d00; }
+    .btn-primary:hover { background-color: #d95e00; border-color: #d95e00; }
+</style>
+
+{% endblock %}

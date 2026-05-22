@@ -1,0 +1,151 @@
+{% extends 'header.html' %}
+{% load static %}
+{% block content %}
+
+<div class="hero-wrap hero-bread" style="background-image: url('{% static "images/bg_6.jpg" %}');">
+    <div class="container">
+        <div class="row no-gutters slider-text align-items-center justify-content-center">
+            <div class="col-md-9 ftco-animate text-center">
+                <p class="breadcrumbs">
+                    <span class="mr-2"><a href="/">Home</a></span>
+                    <span class="mr-2"><a href="{% url 'login' %}">Login</a></span>
+                    <span>Verify OTP</span>
+                </p>
+                <h1 class="mb-0 bread">Verify OTP</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="ftco-section contact-section bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+
+                {% if error %}
+                <div class="alert alert-danger text-center">{{ error }}</div>
+                {% endif %}
+
+                <form action="{% url 'verify_otp' %}" method="post" class="bg-white p-5 contact-form text-center"
+                    onsubmit="return validateOtp()">
+                    {% csrf_token %}
+
+                    <div class="otp-icon-wrap mb-3">
+                        <i class="ion-ios-mail"></i>
+                    </div>
+                    <h5 class="mb-1" style="font-weight:700;">Check your email</h5>
+                    <p class="text-muted mb-4" style="font-size:13px;">
+                        We sent a 4-digit OTP to your registered email address.
+                    </p>
+
+                    <!-- 4 individual OTP boxes -->
+                    <div class="otp-boxes mb-3" id="otp-boxes">
+                        <input class="otp-box" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                        <input class="otp-box" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                        <input class="otp-box" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                        <input class="otp-box" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                    </div>
+
+                    <!-- hidden field that collects the full 4-digit value -->
+                    <input type="hidden" name="otp" id="otp-hidden">
+                    <div class="text-danger mb-3" id="otp-error" style="font-size:13px;"></div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Verify OTP" class="btn btn-primary py-3 px-5">
+                    </div>
+
+                    <p class="mt-2">
+                        <a href="{% url 'forgot_password' %}" style="font-size:13px; color:#f96d00;">
+                            <i class="ion-ios-refresh mr-1"></i> Resend OTP
+                        </a>
+                    </p>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .otp-icon-wrap {
+        width: 72px;
+        height: 72px;
+        background: #fff5ee;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+    }
+    .otp-icon-wrap i { font-size: 2rem; color: #f96d00; }
+
+    .otp-boxes {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+    }
+    .otp-box {
+        width: 56px;
+        height: 60px;
+        text-align: center;
+        font-size: 24px;
+        font-weight: 700;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        outline: none;
+        transition: border-color 0.2s;
+        color: #333;
+    }
+    .otp-box:focus { border-color: #f96d00; }
+    .otp-box.filled { border-color: #f96d00; background: #fff5ee; }
+</style>
+
+<script>
+    const boxes = document.querySelectorAll('.otp-box');
+
+    boxes.forEach((box, i) => {
+        box.addEventListener('input', () => {
+            box.value = box.value.replace(/[^0-9]/g, '');
+            if (box.value) {
+                box.classList.add('filled');
+                if (i < boxes.length - 1) boxes[i + 1].focus();
+            } else {
+                box.classList.remove('filled');
+            }
+        });
+
+        box.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && !box.value && i > 0) {
+                boxes[i - 1].focus();
+                boxes[i - 1].classList.remove('filled');
+            }
+        });
+
+        // allow paste across all boxes
+        box.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const digits = e.clipboardData.getData('text').replace(/[^0-9]/g, '').slice(0, 4);
+            digits.split('').forEach((d, j) => {
+                if (boxes[j]) {
+                    boxes[j].value = d;
+                    boxes[j].classList.add('filled');
+                }
+            });
+            const next = Math.min(digits.length, boxes.length - 1);
+            boxes[next].focus();
+        });
+    });
+
+    function validateOtp() {
+        const otp = Array.from(boxes).map(b => b.value).join('');
+        if (otp.length < 4) {
+            document.getElementById('otp-error').textContent = 'Please enter the 4-digit OTP.';
+            return false;
+        }
+        document.getElementById('otp-hidden').value = otp;
+        document.getElementById('otp-error').textContent = '';
+        return true;
+    }
+</script>
+
+{% endblock %}

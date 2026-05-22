@@ -1,0 +1,27 @@
+# Virtual environment
+myvenv/
+
+# Environment variables (secrets!)
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Collected static files
+staticfiles/
+
+# Egg/dist
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

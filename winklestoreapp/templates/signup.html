@@ -1,0 +1,189 @@
+{% extends 'header.html' %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Sign Up</title>
+</head>
+
+<body class="goto-here">
+
+  <div class="hero-wrap hero-bread" style="background-image: url(&quot;{% static 'images/bg_6.jpg' %}&quot;);">
+    <div class="container">
+      <div class="row no-gutters slider-text align-items-center justify-content-center">
+        <div class="col-md-9 ftco-animate text-center">
+          <p class="breadcrumbs"><span class="mr-2"><a href="/">Home</a></span> <span>Sign Up</span></p>
+          <h1 class="mb-0 bread">Sign Up</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="ftco-section contact-section bg-light">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+
+          {% if success %}
+          <div class="alert alert-success text-center">{{ success }}</div>
+          {% endif %}
+
+          <form action="{% url 'signup' %}" method="post" enctype="multipart/form-data"
+            class="bg-white p-5 contact-form" onsubmit="return validateForm()">
+            {% csrf_token %}
+
+            <div class="row">
+              <div class="col-md-6 form-group">
+                <input type="text" class="form-control" placeholder="First Name" name="signupfname"
+                  id="signupfname" onblur="validateFname(this)">
+                <div class="invalid-feedback" id="fname-error"></div>
+              </div>
+              <div class="col-md-6 form-group">
+                <input type="text" class="form-control" placeholder="Last Name" name="signuplname">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <input type="email" class="form-control {% if email_error %}is-invalid{% endif %}"
+                placeholder="Email" name="signupemail" id="signupemail" onblur="validateEmail(this)">
+              <div class="invalid-feedback" id="email-error">{% if email_error %}{{ email_error }}{% endif %}</div>
+            </div>
+
+            <div class="form-group">
+              <input type="tel" class="form-control" placeholder="Mobile Number" name="signupmobile"
+                id="signupmobile" onblur="validateMobile(this)">
+              <div class="invalid-feedback" id="mobile-error"></div>
+            </div>
+
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="Address" name="signupaddress">
+            </div>
+
+            <div class="form-group">
+              <label class="text-muted mb-1">Profile Picture</label>
+              <input type="file" class="form-control-file" accept="image/*" name="profile_picture">
+            </div>
+
+            <div class="form-group">
+              <label class="text-muted mb-2">I am a</label>
+              <div class="d-flex" style="gap: 30px;">
+                <div class="custom-control custom-radio">
+                  <input type="radio" id="roleBuyer" name="role" value="buyer"
+                         class="custom-control-input" checked>
+                  <label class="custom-control-label" for="roleBuyer">Buyer</label>
+                </div>
+                <div class="custom-control custom-radio">
+                  <input type="radio" id="roleSeller" name="role" value="seller"
+                         class="custom-control-input">
+                  <label class="custom-control-label" for="roleSeller">Seller</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 form-group">
+                <input type="password" class="form-control" placeholder="Password"
+                  name="signuppassword" id="signuppassword" onblur="validatePassword(this)">
+                <div class="invalid-feedback" id="password-error"></div>
+              </div>
+              <div class="col-md-6 form-group">
+                <input type="password" class="form-control" placeholder="Confirm Password"
+                  name="signupconfirmpassword" id="signupconfirmpassword"
+                  onblur="validateConfirmPassword(this)">
+                <div class="invalid-feedback" id="confirm-password-error"></div>
+              </div>
+            </div>
+
+            <div class="form-group mt-3">
+              <input type="submit" value="Sign Up" class="btn btn-primary py-3 px-5">
+            </div>
+            <p class="text-center mt-3">Already have an account? <a href="{% url 'login' %}">Login</a></p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<script>
+  
+  function showError(input, errorId, message) {
+    input.classList.add('is-invalid');
+    document.getElementById(errorId).textContent = message;
+  }
+
+  function clearError(input, errorId) {
+    input.classList.remove('is-invalid');
+    document.getElementById(errorId).textContent = '';
+  }
+
+  function validateFname(input) {
+    if (input.value.trim() === '') {
+      showError(input, 'fname-error', 'First name is required.'); return false;
+    } else if (!/^[A-Za-z]+$/.test(input.value.trim())) {
+      showError(input, 'fname-error', 'First name must contain letters only.'); return false;
+    } else {
+      clearError(input, 'fname-error'); return true;
+    }
+  }
+
+  function validateEmail(input) {
+    if (input.value.trim() === '') {
+      showError(input, 'email-error', 'Email is required.'); return false;
+    } else if (!/^[\w\.-]+@[\w\.-]+\.\w{2,}$/.test(input.value.trim())) {
+      showError(input, 'email-error', 'Enter a valid email address.'); return false;
+    } else {
+      clearError(input, 'email-error'); return true;
+    }
+  }
+
+  function validateMobile(input) {
+    if (input.value.trim() === '') {
+      showError(input, 'mobile-error', 'Mobile number is required.'); return false;
+    } else if (!/^\d{10}$/.test(input.value.trim())) {
+      showError(input, 'mobile-error', 'Mobile number must be exactly 10 digits.'); return false;
+    } else {
+      clearError(input, 'mobile-error'); return true;
+    }
+  }
+
+  function validatePassword(input) {
+    var val = input.value;
+    if (val === '') {
+      showError(input, 'password-error', 'Password is required.'); return false;
+    } else if (val.length < 8) {
+      showError(input, 'password-error', 'Password must be at least 8 characters.'); return false;
+    } else if (!/[A-Za-z]/.test(val) || !/\d/.test(val)) {
+      showError(input, 'password-error', 'Password must contain at least one letter and one number.'); return false;
+    } else {
+      clearError(input, 'password-error'); return true;
+    }
+  }
+
+  function validateConfirmPassword(input) {
+    var password = document.getElementById('signuppassword').value;
+    if (input.value === '') {
+      showError(input, 'confirm-password-error', 'Please confirm your password.'); return false;
+    } else if (input.value !== password) {
+      showError(input, 'confirm-password-error', 'Passwords do not match.'); return false;
+    } else {
+      clearError(input, 'confirm-password-error'); return true;
+    }
+  }
+
+  function validateForm() {
+    var fname    = validateFname(document.getElementById('signupfname'));
+    var email    = validateEmail(document.getElementById('signupemail'));
+    var mobile   = validateMobile(document.getElementById('signupmobile'));
+    var password = validatePassword(document.getElementById('signuppassword'));
+    var confirm  = validateConfirmPassword(document.getElementById('signupconfirmpassword'));
+    return fname && email && mobile && password && confirm;
+  }
+</script>
+
+</body>
+
+</html>
+{% endblock %}

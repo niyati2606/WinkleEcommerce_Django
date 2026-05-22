@@ -1,0 +1,181 @@
+{% extends 'header.html' %}
+{% load static %}
+{% block content %}
+
+<!-- Page Banner -->
+<div class="hero-wrap hero-bread" style="background-image: url(&quot;{% static 'images/bg_6.jpg' %}&quot;);">
+    <div class="container">
+        <div class="row no-gutters slider-text align-items-center justify-content-center">
+            <div class="col-md-9 ftco-animate text-center">
+                <p class="breadcrumbs">
+                    <span class="mr-2"><a href="{% url 'index' %}">Home <i class="ion-ios-arrow-forward"></i></a></span>
+                    <span class="mr-2"><a href="{% url 'shop' %}">Shop <i class="ion-ios-arrow-forward"></i></a></span>
+                    <span>{{ product.product_name }}</span>
+                </p>
+                <h1 class="mb-0 bread">Product Detail</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Product Detail -->
+<section class="ftco-section">
+    <div class="container">
+        <div class="row">
+
+            <!-- Product Image -->
+            <div class="col-lg-6 mb-5 ftco-animate">
+                {% if product.product_image %}
+                <img src="{{ product.product_image.url }}" class="img-fluid rounded" alt="{{ product.product_name }}"
+                    style="width:100%; height:460px; object-fit:cover;">
+                {% else %}
+                <img src="{% static 'images/product-1.jpg' %}" class="img-fluid rounded"
+                    alt="{{ product.product_name }}">
+                {% endif %}
+            </div>
+
+            <!-- Product Info -->
+            <div class="col-lg-6 product-details pl-md-5 ftco-animate">
+                <span class="badge badge-warning mb-2" style="font-size:13px;">{{ product.category }}</span>
+                <h3>{{ product.product_name }}</h3>
+
+                <div class="rating d-flex mb-2">
+                    <p class="text-left mr-4 mb-0">
+                        <a href="#"><span class="ion-ios-star-outline"></span></a>
+                        <a href="#"><span class="ion-ios-star-outline"></span></a>
+                        <a href="#"><span class="ion-ios-star-outline"></span></a>
+                        <a href="#"><span class="ion-ios-star-outline"></span></a>
+                        <a href="#"><span class="ion-ios-star-outline"></span></a>
+                    </p>
+                </div>
+
+                <p class="price mb-3"><span style="font-size:1.6rem; font-weight:700;">&#8377;{{ product.price }}</span>
+                </p>
+
+                <p class="mb-4" style="line-height:1.8; color:#555;">{{ product.description }}</p>
+
+                <!-- <p class="text-muted mb-4" style="font-size:13px;">
+                    <i class="ion-ios-person mr-1"></i>
+                    Sold by <strong>{{ product.seller.firstName }} {{ product.seller.lastName }}</strong>
+                </p> -->
+
+                <!-- Size selector
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <div class="form-group d-flex">
+                            <div class="select-wrap">
+                                <div class="icon"><span class="ion-ios-arrow-down"></span></div>
+                                <select class="form-control">
+                                    <option value="">Small</option>
+                                    <option value="">Medium</option>
+                                    <option value="">Large</option>
+                                    <option value="">Extra Large</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-100"></div> -->
+
+                <!-- Quantity -->
+                <!-- <div class="input-group col-md-6 d-flex mb-3">
+                    <span class="input-group-btn mr-2">
+                        <button type="button" class="quantity-left-minus btn" data-type="minus">
+                            <i class="ion-ios-remove"></i>
+                        </button>
+                    </span>
+                    <input type="text" id="quantity" name="quantity" class="form-control input-number text-center"
+                        value="1" min="1" max="100">
+                    <span class="input-group-btn ml-2">
+                        <button type="button" class="quantity-right-plus btn" data-type="plus">
+                            <i class="ion-ios-add"></i>
+                        </button>
+                    </span>
+                </div> -->
+                <div class="w-100"></div>
+
+                <div class="col-md-12 mt-2">
+                    <p>
+                        {% if cart_flag %}
+                        <a href="{% url 'cart' %}" class="btn btn-black py-3 px-5 mr-2">
+                            Go to Cart <i class="ion-ios-cart ml-1"></i>
+                        </a>
+                        {% else %}
+                        <a href="{% url 'add_to_cart' product.id %}" class="btn btn-black py-3 px-5 mr-2">
+                            Add to Cart <i class="ion-ios-cart ml-1"></i>
+                        </a>
+                        {% endif %}
+                        {% if wishlist_flag %}
+                        <a href="{% url 'remove_from_whishlist' product.id %}" class="btn btn-danger py-3 px-5 mr-2">
+                            Remove from Wishlist
+                        </a>
+                        {% else %}
+                        <a href="{% url 'add_to_whishlist' product.id %}" class="btn btn-primary py-3 px-5 mr-2">
+                            Add to Wishlist
+                        </a>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+</section>
+
+<!-- Related Products -->
+{% if related_products %}
+<section class="ftco-section bg-light">
+    <div class="container">
+        <div class="row justify-content-center mb-3 pb-3">
+            <div class="col-md-12 heading-section text-center ftco-animate">
+                <h2 class="mb-4">Related Products</h2>
+                <p>More products in the <strong>{{ product.category }}</strong> category</p>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            {% for item in related_products %}
+            <div class="col-sm-6 col-md-4 col-lg-3 ftco-animate mb-4">
+                <div class="product">
+                    <a href="{% url 'product_detail' item.id %}" class="img-prod">
+                        {% if item.product_image %}
+                        <img class="img-fluid" src="{{ item.product_image.url }}" alt="{{ item.product_name }}"
+                            style="height:260px; object-fit:cover; width:100%;">
+                        {% else %}
+                        <img class="img-fluid" src="{% static 'images/product-1.jpg' %}" alt="{{ item.product_name }}">
+                        {% endif %}
+                        <span class="status">{{ item.category }}</span>
+                        <div class="overlay"></div>
+                    </a>
+                    <div class="text py-3 px-3">
+                        <h3><a href="{% url 'product_detail' item.id %}">{{ item.product_name }}</a></h3>
+                        <div class="d-flex">
+                            <div class="pricing">
+                                <p class="price"><span>&#8377;{{ item.price }}</span></p>
+                            </div>
+                            <div class="rating">
+                                <p class="text-right">
+                                    <a href="#"><span class="ion-ios-star-outline"></span></a>
+                                    <a href="#"><span class="ion-ios-star-outline"></span></a>
+                                    <a href="#"><span class="ion-ios-star-outline"></span></a>
+                                    <a href="#"><span class="ion-ios-star-outline"></span></a>
+                                    <a href="#"><span class="ion-ios-star-outline"></span></a>
+                                </p>
+                            </div>
+                        </div>
+                        <p class="bottom-area d-flex px-3">
+                            <a href="#" class="add-to-cart text-center py-2 mr-1">
+                                <span>Add to cart <i class="ion-ios-add ml-1"></i></span>
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% endblock %}
